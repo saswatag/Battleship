@@ -1,14 +1,22 @@
 using System;
 using Xunit;
+using FluentAssertions;
 
 namespace BattleshipStateTrackerTests
 {
-    public class UnitTest1
+    public class BoardSetupTests
     {
         [Fact]
-        public void Test1()
+        public void BattleshipsCanBePlacedOnTheBoard()
         {
+            BattleshipBoard board = new BattleshipBoard();
 
+            int startingXPosition = 0;
+            int startingYPosition = 0;
+            int shipLength = 2;
+            board.PlaceShipAt(startingXPosition, startingYPosition, shipLength);
+
+            board.IsShipAt(startingXPosition, startingYPosition).Should().BeTrue();
         }
     }
 }
