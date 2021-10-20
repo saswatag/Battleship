@@ -18,5 +18,13 @@ namespace BattleshipStateTrackerTests
 
             board.IsShipAt(startingXPosition, startingYPosition).Should().BeTrue();
         }
+
+        [Fact]
+        public void SetupAnEmptyBoard()
+        {
+            BattleshipBoard board = new BattleshipBoard();
+
+            board.IsEmpty().Should().BeTrue();
+        }
     }
 }
