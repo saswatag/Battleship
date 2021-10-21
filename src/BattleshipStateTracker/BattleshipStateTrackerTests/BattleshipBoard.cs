@@ -16,13 +16,17 @@ namespace BattleshipStateTrackerTests
             InitializeEmptyBoard();
         }
 
-        internal void PlaceShipAt(int startingXPosition, int startingYPosition, int shipLength)
+        internal bool PlaceShipAt(int startingXPosition, int startingYPosition, int shipLength)
         {
             if(CanShipBePlacedAt(startingXPosition, startingYPosition, shipLength))
             {
                 for(int count = 0; count < shipLength; count++)
                     Board[startingXPosition + count][startingYPosition] = OCCUPIED_SPOT_CHARACTER;
-            }    
+
+                return true;
+            }
+
+            return false;
         }
 
         private bool CanShipBePlacedAt(int startingXPosition, int startingYPosition, int shipLength)
@@ -31,6 +35,10 @@ namespace BattleshipStateTrackerTests
                 return false;
 
             if (startingXPosition + shipLength >= COLUMNS)
+                return false;
+
+            var targetShipPositions = Enumerable.Range(1, shipLength).Select(x => x + startingXPosition).ToList().AsReadOnly();
+            if (targetShipPositions.Any(x => IsShipAt(x, startingYPosition)))
                 return false;
 
             return true;

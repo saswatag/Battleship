@@ -45,8 +45,44 @@ namespace BattleshipStateTrackerTests
             board.PlaceShipAt(anyXPosition, anyYPosition, anyShipLength);
 
             // Assert
-            var allExpectedOccupiedColumns = Enumerable.Range(anyXPosition, anyShipLength).ToList().AsReadOnly();
+            var allExpectedOccupiedColumns = Enumerable.Range(1, anyShipLength).Select(x => x + anyXPosition).ToList().AsReadOnly();
+
             allExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, anyYPosition).Should().BeTrue());
+            board.IsEmpty().Should().BeFalse();
+        }
+
+        [Fact]
+        public void MoreThanOneShipCannotOccupySamePosition()
+        {
+            // Arrange and Act
+            BattleshipBoard board = new BattleshipBoard();
+
+            int anyXPosition = 2;
+            int anyYPosition = 2;
+            int anyShipLength = 3;
+
+            int firstShipXPosition = anyXPosition;
+            int firstShipYPosition = anyYPosition;
+            int firstShipLength = anyShipLength;
+            bool firstShipPlaced = board.PlaceShipAt(firstShipXPosition, firstShipYPosition, firstShipLength);
+
+            int secondShipXPosition = firstShipXPosition - 1;
+            int secondShipYPosition = firstShipYPosition;
+            int secondShipLength = firstShipLength - 1;
+            bool secondShipPlaced = board.PlaceShipAt(secondShipXPosition, secondShipYPosition, secondShipLength);
+
+            int thirdShipXPosition = firstShipXPosition + 1;
+            int thirdShipYPosition = firstShipYPosition;
+            int thirdShipLength = firstShipLength - 1;
+            bool thirdShipPlaced = board.PlaceShipAt(thirdShipXPosition, thirdShipYPosition, thirdShipLength);
+
+            // Assert
+            var allExpectedOccupiedColumns = Enumerable.Range(1, firstShipLength).Select(x => x + firstShipXPosition).ToList().AsReadOnly();
+            allExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, anyYPosition).Should().BeTrue());
+
+            firstShipPlaced.Should().BeTrue();
+            secondShipPlaced.Should().BeFalse();
+            thirdShipPlaced.Should().BeFalse();
         }
     }
 }
