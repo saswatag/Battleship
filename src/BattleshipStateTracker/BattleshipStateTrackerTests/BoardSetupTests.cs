@@ -45,7 +45,7 @@ namespace BattleshipStateTrackerTests
             board.PlaceShipAt(anyXPosition, anyYPosition, anyShipLength);
 
             // Assert
-            var allExpectedOccupiedColumns = GetTargetShipPositions(anyXPosition, anyShipLength);
+            var allExpectedOccupiedColumns = GetExpectedTargetShipPositions(anyXPosition, anyShipLength);
             allExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, anyYPosition).Should().BeTrue());
             board.IsEmpty().Should().BeFalse();
         }
@@ -76,7 +76,7 @@ namespace BattleshipStateTrackerTests
             bool thirdShipPlaced = board.PlaceShipAt(thirdShipXPosition, thirdShipYPosition, thirdShipLength);
 
             // Assert
-            var allExpectedOccupiedColumns = GetTargetShipPositions(firstShipXPosition, firstShipLength);
+            var allExpectedOccupiedColumns = GetExpectedTargetShipPositions(firstShipXPosition, firstShipLength);
             allExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, anyYPosition).Should().BeTrue());
 
             firstShipPlaced.Should().BeTrue();
@@ -84,9 +84,49 @@ namespace BattleshipStateTrackerTests
             thirdShipPlaced.Should().BeFalse();
         }
 
+        [Fact]
+        public void PlaceMultipleShipsSuccessfully()
+        {
+            // Arrange and Act
+            BattleshipBoard board = new BattleshipBoard();
+
+            int anyXPosition = 2;
+            int anyYPosition = 2;
+            int anyShipLength = 3;
+
+            int firstShipXPosition = anyXPosition;
+            int firstShipYPosition = anyYPosition;
+            int firstShipLength = anyShipLength;
+            bool firstShipPlaced = board.PlaceShipAt(firstShipXPosition, firstShipYPosition, firstShipLength);
+
+            int secondShipXPosition = firstShipXPosition - 1;
+            int secondShipYPosition = firstShipYPosition + 1;
+            int secondShipLength = anyShipLength;
+            bool secondShipPlaced = board.PlaceShipAt(secondShipXPosition, secondShipYPosition, secondShipLength);
+
+            int thirdShipXPosition = firstShipXPosition;
+            int thirdShipYPosition = firstShipYPosition + 3;
+            int thirdShipLength = anyShipLength + 2;
+            bool thirdShipPlaced = board.PlaceShipAt(thirdShipXPosition, thirdShipYPosition, thirdShipLength);
+
+            // Assert
+            var ship1ExpectedOccupiedColumns = GetExpectedTargetShipPositions(firstShipXPosition, firstShipLength);
+            var ship2ExpectedOccupiedColumns = GetExpectedTargetShipPositions(secondShipXPosition, secondShipLength);
+            var ship3ExpectedOccupiedColumns = GetExpectedTargetShipPositions(thirdShipXPosition, thirdShipLength);
+
+            firstShipPlaced.Should().BeTrue();
+            ship1ExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, firstShipYPosition).Should().BeTrue());
+
+            secondShipPlaced.Should().BeTrue();
+            ship2ExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, secondShipYPosition).Should().BeTrue());
+
+            thirdShipPlaced.Should().BeTrue();
+            ship3ExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, thirdShipYPosition).Should().BeTrue());
+        }
+
         #region Helpers
 
-        private ReadOnlyCollection<int> GetTargetShipPositions(int startingXPosition, int shipLength)
+        private ReadOnlyCollection<int> GetExpectedTargetShipPositions(int startingXPosition, int shipLength)
         {
             return Enumerable.Range(1, shipLength).Select(x => x + startingXPosition).ToList().AsReadOnly();
         }
