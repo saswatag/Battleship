@@ -85,7 +85,7 @@ namespace BattleshipStateTrackerTests
         }
 
         [Fact]
-        public void PlaceMultipleShipsSuccessfully()
+        public void PlaceMultipleShipsSuccessfullyInHorizontalOrientation()
         {
             // Arrange and Act
             BattleshipBoard board = new BattleshipBoard();
