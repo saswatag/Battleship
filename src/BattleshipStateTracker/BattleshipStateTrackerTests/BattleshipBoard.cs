@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace BattleshipStateTrackerTests
@@ -29,21 +30,6 @@ namespace BattleshipStateTrackerTests
             return false;
         }
 
-        private bool CanShipBePlacedAt(int startingXPosition, int startingYPosition, int shipLength)
-        {
-            if (startingXPosition < 0 || startingXPosition >= ROWS || startingYPosition < 0 || startingYPosition >= COLUMNS)
-                return false;
-
-            if (startingXPosition + shipLength >= COLUMNS)
-                return false;
-
-            var targetShipPositions = Enumerable.Range(1, shipLength).Select(x => x + startingXPosition).ToList().AsReadOnly();
-            if (targetShipPositions.Any(x => IsShipAt(x, startingYPosition)))
-                return false;
-
-            return true;
-        }
-
         internal bool IsShipAt(int startingXPosition, int startingYPosition)
         {
             return Board[startingXPosition][startingYPosition].Equals(OCCUPIED_SPOT_CHARACTER);
@@ -58,6 +44,26 @@ namespace BattleshipStateTrackerTests
         {
             var mat = Enumerable.Repeat(FREE_SPOT_CHARACTER, ROWS).ToArray();
             Array.Fill(Board, mat, 0, COLUMNS);
+        }
+
+        private bool CanShipBePlacedAt(int startingXPosition, int startingYPosition, int shipLength)
+        {
+            if (startingXPosition < 0 || startingXPosition >= ROWS || startingYPosition < 0 || startingYPosition >= COLUMNS)
+                return false;
+
+            if (startingXPosition + shipLength >= COLUMNS)
+                return false;
+
+            var targetShipPositions = GetTargetShipPositions(startingXPosition, shipLength);
+            if (targetShipPositions.Any(x => IsShipAt(x, startingYPosition)))
+                return false;
+
+            return true;
+        }
+
+        private ReadOnlyCollection<int> GetTargetShipPositions(int startingXPosition, int shipLength)
+        {
+            return Enumerable.Range(1, shipLength).Select(x => x + startingXPosition).ToList().AsReadOnly();
         }
     }
 }

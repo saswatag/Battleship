@@ -45,8 +45,7 @@ namespace BattleshipStateTrackerTests
             board.PlaceShipAt(anyXPosition, anyYPosition, anyShipLength);
 
             // Assert
-            var allExpectedOccupiedColumns = Enumerable.Range(1, anyShipLength).Select(x => x + anyXPosition).ToList().AsReadOnly();
-
+            var allExpectedOccupiedColumns = GetTargetShipPositions(anyXPosition, anyShipLength);
             allExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, anyYPosition).Should().BeTrue());
             board.IsEmpty().Should().BeFalse();
         }
@@ -77,12 +76,21 @@ namespace BattleshipStateTrackerTests
             bool thirdShipPlaced = board.PlaceShipAt(thirdShipXPosition, thirdShipYPosition, thirdShipLength);
 
             // Assert
-            var allExpectedOccupiedColumns = Enumerable.Range(1, firstShipLength).Select(x => x + firstShipXPosition).ToList().AsReadOnly();
+            var allExpectedOccupiedColumns = GetTargetShipPositions(firstShipXPosition, firstShipLength);
             allExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, anyYPosition).Should().BeTrue());
 
             firstShipPlaced.Should().BeTrue();
             secondShipPlaced.Should().BeFalse();
             thirdShipPlaced.Should().BeFalse();
         }
+
+        #region Helpers
+
+        private ReadOnlyCollection<int> GetTargetShipPositions(int startingXPosition, int shipLength)
+        {
+            return Enumerable.Range(1, shipLength).Select(x => x + startingXPosition).ToList().AsReadOnly();
+        }
+
+        #endregion
     }
 }
