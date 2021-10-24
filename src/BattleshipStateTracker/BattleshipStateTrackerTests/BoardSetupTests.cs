@@ -17,7 +17,7 @@ namespace BattleshipStateTrackerTests
             int startingXPosition = 0;
             int startingYPosition = 0;
             int shipLength = 2;
-            board.PlaceShipAt(startingXPosition, startingYPosition, shipLength);
+            board.PlaceShipAt(startingXPosition, startingYPosition, shipLength, ShipOrientation.Horizontal);
 
             // Assert
             board.IsShipAt(startingXPosition, startingYPosition).Should().BeTrue();
@@ -42,7 +42,7 @@ namespace BattleshipStateTrackerTests
             int anyXPosition = 2;
             int anyYPosition = 2;
             int anyShipLength = 3;
-            board.PlaceShipAt(anyXPosition, anyYPosition, anyShipLength);
+            board.PlaceShipAt(anyXPosition, anyYPosition, anyShipLength, ShipOrientation.Horizontal);
 
             // Assert
             var allExpectedOccupiedColumns = GetExpectedTargetShipPositions(anyXPosition, anyShipLength);
@@ -63,17 +63,17 @@ namespace BattleshipStateTrackerTests
             int firstShipXPosition = anyXPosition;
             int firstShipYPosition = anyYPosition;
             int firstShipLength = anyShipLength;
-            bool firstShipPlaced = board.PlaceShipAt(firstShipXPosition, firstShipYPosition, firstShipLength);
+            bool firstShipPlaced = board.PlaceShipAt(firstShipXPosition, firstShipYPosition, firstShipLength, ShipOrientation.Horizontal);
 
             int secondShipXPosition = firstShipXPosition - 1;
             int secondShipYPosition = firstShipYPosition;
             int secondShipLength = firstShipLength - 1;
-            bool secondShipPlaced = board.PlaceShipAt(secondShipXPosition, secondShipYPosition, secondShipLength);
+            bool secondShipPlaced = board.PlaceShipAt(secondShipXPosition, secondShipYPosition, secondShipLength, ShipOrientation.Horizontal);
 
             int thirdShipXPosition = firstShipXPosition + 1;
             int thirdShipYPosition = firstShipYPosition;
             int thirdShipLength = firstShipLength - 1;
-            bool thirdShipPlaced = board.PlaceShipAt(thirdShipXPosition, thirdShipYPosition, thirdShipLength);
+            bool thirdShipPlaced = board.PlaceShipAt(thirdShipXPosition, thirdShipYPosition, thirdShipLength, ShipOrientation.Horizontal);
 
             // Assert
             var allExpectedOccupiedColumns = GetExpectedTargetShipPositions(firstShipXPosition, firstShipLength);
@@ -97,17 +97,17 @@ namespace BattleshipStateTrackerTests
             int firstShipXPosition = anyXPosition;
             int firstShipYPosition = anyYPosition;
             int firstShipLength = anyShipLength;
-            bool firstShipPlaced = board.PlaceShipAt(firstShipXPosition, firstShipYPosition, firstShipLength);
+            bool firstShipPlaced = board.PlaceShipAt(firstShipXPosition, firstShipYPosition, firstShipLength, ShipOrientation.Horizontal);
 
             int secondShipXPosition = firstShipXPosition - 1;
             int secondShipYPosition = firstShipYPosition + 1;
             int secondShipLength = anyShipLength;
-            bool secondShipPlaced = board.PlaceShipAt(secondShipXPosition, secondShipYPosition, secondShipLength);
+            bool secondShipPlaced = board.PlaceShipAt(secondShipXPosition, secondShipYPosition, secondShipLength, ShipOrientation.Horizontal);
 
             int thirdShipXPosition = firstShipXPosition;
             int thirdShipYPosition = firstShipYPosition + 3;
             int thirdShipLength = anyShipLength + 2;
-            bool thirdShipPlaced = board.PlaceShipAt(thirdShipXPosition, thirdShipYPosition, thirdShipLength);
+            bool thirdShipPlaced = board.PlaceShipAt(thirdShipXPosition, thirdShipYPosition, thirdShipLength, ShipOrientation.Horizontal);
 
             // Assert
             var ship1ExpectedOccupiedColumns = GetExpectedTargetShipPositions(firstShipXPosition, firstShipLength);
@@ -124,11 +124,34 @@ namespace BattleshipStateTrackerTests
             ship3ExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, thirdShipYPosition).Should().BeTrue());
         }
 
+        [Fact]
+        public void PlacingBatleshipInVerticalOrientation()
+        {
+            // Arrange and Act
+            BattleshipBoard board = new BattleshipBoard();
+
+            int anyXPosition = 2;
+            int anyYPosition = 2;
+            int anyShipLength = 3;
+            bool shipPlaced = board.PlaceShipAt(anyXPosition, anyYPosition, anyShipLength, ShipOrientation.Vertical);
+
+            // Assert
+            var allExpectedOccupiedRows = GetExpectedTargetShipPositionsInVerticalOrientation(anyYPosition, anyShipLength);
+            allExpectedOccupiedRows.ToList().ForEach(x => board.IsShipAt(anyXPosition, x).Should().BeTrue());
+            shipPlaced.Should().BeTrue();
+            board.IsEmpty().Should().BeFalse();
+        }
+
         #region Helpers
 
         private ReadOnlyCollection<int> GetExpectedTargetShipPositions(int startingXPosition, int shipLength)
         {
-            return Enumerable.Range(1, shipLength).Select(x => x + startingXPosition).ToList().AsReadOnly();
+            return Enumerable.Range(0, shipLength).Select(position => position + startingXPosition).ToList().AsReadOnly();
+        }
+
+        private ReadOnlyCollection<int> GetExpectedTargetShipPositionsInVerticalOrientation(int startingYPosition, int shipLength)
+        {
+            return Enumerable.Range(0, shipLength).Select(position => position + startingYPosition).ToList().AsReadOnly();
         }
 
         #endregion
