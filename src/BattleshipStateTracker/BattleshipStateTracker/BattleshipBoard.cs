@@ -4,13 +4,13 @@ using System.Linq;
 
 namespace BattleshipStateTrackerTests
 {
-    internal enum ShipOrientation
+    public enum ShipOrientation
     {
         Horizontal,
         Vertical
     }
 
-    internal class BattleshipBoard
+    public class BattleshipBoard
     {
         const char FREE_SPOT_CHARACTER = '.';
         const char OCCUPIED_SPOT_CHARACTER = '*';
@@ -19,7 +19,7 @@ namespace BattleshipStateTrackerTests
                 
         private char[,] Board { get; } = new char[ROWS, COLUMNS];
 
-        internal int ShipCount { get; private set; }
+        public int ShipCount { get; private set; }
 
         public BattleshipBoard()
         {
@@ -27,7 +27,7 @@ namespace BattleshipStateTrackerTests
             ShipCount = 0;
         }
 
-        internal bool PlaceShipAt(int startingXPosition, int startingYPosition, int shipLength, ShipOrientation orientation)
+        public bool PlaceShipAt(int startingXPosition, int startingYPosition, int shipLength, ShipOrientation orientation)
         {
             if(CanShipBePlacedAt(startingXPosition, startingYPosition, shipLength, orientation))
             {
@@ -49,12 +49,12 @@ namespace BattleshipStateTrackerTests
                 return false;
         }
 
-        internal bool IsShipAt(int startingXPosition, int startingYPosition)
+        public bool IsShipAt(int startingXPosition, int startingYPosition)
         {
             return Board[startingXPosition, startingYPosition].Equals(OCCUPIED_SPOT_CHARACTER);
         }
 
-        internal bool IsEmpty()
+        public bool IsEmpty()
         {
             foreach(var boardItem in Board)
                 if (!boardItem.Equals(FREE_SPOT_CHARACTER))
