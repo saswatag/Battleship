@@ -142,6 +142,46 @@ namespace BattleshipStateTrackerTests
             board.IsEmpty().Should().BeFalse();
         }
 
+        [Fact]
+        public void PlacingMultipleShipInVerticalOrientation()
+        {
+            // Arrange and Act
+            BattleshipBoard board = new BattleshipBoard();
+
+            int anyXPosition = 2;
+            int anyYPosition = 2;
+            int anyShipLength = 3;
+
+            int firstShipXPosition = anyXPosition;
+            int firstShipYPosition = anyYPosition;
+            int firstShipLength = anyShipLength;
+            bool firstShipPlaced = board.PlaceShipAt(firstShipXPosition, firstShipYPosition, firstShipLength, ShipOrientation.Vertical);
+
+            int secondShipXPosition = firstShipXPosition - 1;
+            int secondShipYPosition = firstShipYPosition + 1;
+            int secondShipLength = anyShipLength;
+            bool secondShipPlaced = board.PlaceShipAt(secondShipXPosition, secondShipYPosition, secondShipLength, ShipOrientation.Vertical);
+
+            int thirdShipXPosition = firstShipXPosition + 2;
+            int thirdShipYPosition = firstShipYPosition + 2;
+            int thirdShipLength = anyShipLength + 2;
+            bool thirdShipPlaced = board.PlaceShipAt(thirdShipXPosition, thirdShipYPosition, thirdShipLength, ShipOrientation.Vertical);
+
+            // Assert
+            var ship1ExpectedOccupiedColumns = GetExpectedTargetShipPositionsInVerticalOrientation(firstShipYPosition, firstShipLength);
+            var ship2ExpectedOccupiedColumns = GetExpectedTargetShipPositionsInVerticalOrientation(secondShipYPosition, secondShipLength);
+            var ship3ExpectedOccupiedColumns = GetExpectedTargetShipPositionsInVerticalOrientation(thirdShipYPosition, thirdShipLength);
+
+            firstShipPlaced.Should().BeTrue();
+            ship1ExpectedOccupiedColumns.ToList().ForEach(yPosition => board.IsShipAt(firstShipXPosition, yPosition).Should().BeTrue());
+
+            secondShipPlaced.Should().BeTrue();
+            ship2ExpectedOccupiedColumns.ToList().ForEach(yPosition => board.IsShipAt(secondShipXPosition, yPosition).Should().BeTrue());
+
+            thirdShipPlaced.Should().BeTrue();
+            ship3ExpectedOccupiedColumns.ToList().ForEach(yPosition => board.IsShipAt(thirdShipXPosition, yPosition).Should().BeTrue());
+        }
+
         #region Helpers
 
         private ReadOnlyCollection<int> GetExpectedTargetShipPositions(int startingXPosition, int shipLength)
