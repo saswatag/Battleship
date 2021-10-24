@@ -19,9 +19,12 @@ namespace BattleshipStateTrackerTests
                 
         private char[,] Board { get; } = new char[ROWS, COLUMNS];
 
+        internal int ShipCount { get; private set; }
+
         public BattleshipBoard()
         {
             InitializeEmptyBoard();
+            ShipCount = 0;
         }
 
         internal bool PlaceShipAt(int startingXPosition, int startingYPosition, int shipLength, ShipOrientation orientation)
@@ -38,6 +41,7 @@ namespace BattleshipStateTrackerTests
                     for (int count = 0; count < shipLength; count++)
                         Board[startingXPosition, startingYPosition + count] = OCCUPIED_SPOT_CHARACTER;
                 }
+                ShipCount++;
 
                 return true;
             }

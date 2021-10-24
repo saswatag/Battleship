@@ -258,6 +258,44 @@ namespace BattleshipStateTrackerTests
             secondShipPlaced.Should().BeFalse();
 
             thirdShipPlaced.Should().BeFalse();
+
+            board.ShipCount.Should().Be(1);
+        }
+
+        [Fact]
+        public void PlacingBatleshipUpdatesShipCount()
+        {
+            // Arrange and Act
+            BattleshipBoard board = new BattleshipBoard();
+
+            int anyXPosition = 2;
+            int anyYPosition = 2;
+            int anyShipLength = 3;
+            bool shipPlaced = board.PlaceShipAt(anyXPosition, anyYPosition, anyShipLength, ShipOrientation.Horizontal);
+
+            // Assert
+            var allExpectedOccupiedColumns = GetExpectedTargetShipPositions(anyXPosition, anyShipLength);
+            allExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, anyYPosition).Should().BeTrue());
+            board.IsEmpty().Should().BeFalse();
+            shipPlaced.Should().BeTrue();
+            board.ShipCount.Should().Be(1);
+        }
+
+        [Fact]
+        public void UnsuccessfulShipPlacementDoesNotIncrementShipCount()
+        {
+            // Arrange and Act
+            BattleshipBoard board = new BattleshipBoard();
+
+            int anyXPosition = 9;
+            int anyYPosition = 1;
+            int anyShipLength = 3;
+            bool shipPlaced = board.PlaceShipAt(anyXPosition, anyYPosition, anyShipLength, ShipOrientation.Horizontal);
+
+            // Assert
+            board.IsEmpty().Should().BeTrue();
+            shipPlaced.Should().BeFalse();
+            board.ShipCount.Should().Be(0);
         }
 
         #region Helpers
