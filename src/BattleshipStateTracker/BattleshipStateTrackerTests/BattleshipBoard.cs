@@ -18,6 +18,7 @@ namespace BattleshipStateTrackerTests
         const int COLUMNS = 10;
                 
         private char[,] Board { get; } = new char[ROWS, COLUMNS];
+
         public BattleshipBoard()
         {
             InitializeEmptyBoard();

@@ -168,18 +168,96 @@ namespace BattleshipStateTrackerTests
             bool thirdShipPlaced = board.PlaceShipAt(thirdShipXPosition, thirdShipYPosition, thirdShipLength, ShipOrientation.Vertical);
 
             // Assert
-            var ship1ExpectedOccupiedColumns = GetExpectedTargetShipPositionsInVerticalOrientation(firstShipYPosition, firstShipLength);
-            var ship2ExpectedOccupiedColumns = GetExpectedTargetShipPositionsInVerticalOrientation(secondShipYPosition, secondShipLength);
-            var ship3ExpectedOccupiedColumns = GetExpectedTargetShipPositionsInVerticalOrientation(thirdShipYPosition, thirdShipLength);
+            var ship1ExpectedOccupiedRows = GetExpectedTargetShipPositionsInVerticalOrientation(firstShipYPosition, firstShipLength);
+            var ship2ExpectedOccupiedRows = GetExpectedTargetShipPositionsInVerticalOrientation(secondShipYPosition, secondShipLength);
+            var ship3ExpectedOccupiedRows = GetExpectedTargetShipPositionsInVerticalOrientation(thirdShipYPosition, thirdShipLength);
 
             firstShipPlaced.Should().BeTrue();
-            ship1ExpectedOccupiedColumns.ToList().ForEach(yPosition => board.IsShipAt(firstShipXPosition, yPosition).Should().BeTrue());
+            ship1ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAt(firstShipXPosition, yPosition).Should().BeTrue());
 
             secondShipPlaced.Should().BeTrue();
-            ship2ExpectedOccupiedColumns.ToList().ForEach(yPosition => board.IsShipAt(secondShipXPosition, yPosition).Should().BeTrue());
+            ship2ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAt(secondShipXPosition, yPosition).Should().BeTrue());
 
             thirdShipPlaced.Should().BeTrue();
-            ship3ExpectedOccupiedColumns.ToList().ForEach(yPosition => board.IsShipAt(thirdShipXPosition, yPosition).Should().BeTrue());
+            ship3ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAt(thirdShipXPosition, yPosition).Should().BeTrue());
+        }
+
+        [Fact]
+        public void PlacingMultipleShipsInMixedOrientation()
+        {
+            // Arrange and Act
+            BattleshipBoard board = new BattleshipBoard();
+
+            int anyXPosition = 2;
+            int anyYPosition = 2;
+            int anyShipLength = 3;
+
+            int firstShipXPosition = anyXPosition;
+            int firstShipYPosition = anyYPosition;
+            int firstShipLength = anyShipLength;
+            bool firstShipPlaced = board.PlaceShipAt(firstShipXPosition, firstShipYPosition, firstShipLength, ShipOrientation.Vertical);
+
+            int secondShipXPosition = firstShipXPosition - 1;
+            int secondShipYPosition = firstShipYPosition + 1;
+            int secondShipLength = anyShipLength;
+            bool secondShipPlaced = board.PlaceShipAt(secondShipXPosition, secondShipYPosition, secondShipLength, ShipOrientation.Vertical);
+
+            int thirdShipXPosition = firstShipXPosition - 2;
+            int thirdShipYPosition = firstShipYPosition - 2;
+            int thirdShipLength = anyShipLength + 2;
+            bool thirdShipPlaced = board.PlaceShipAt(thirdShipXPosition, thirdShipYPosition, thirdShipLength, ShipOrientation.Horizontal);
+
+            // Assert
+            var ship1ExpectedOccupiedRows = GetExpectedTargetShipPositionsInVerticalOrientation(firstShipYPosition, firstShipLength);
+            var ship2ExpectedOccupiedRows = GetExpectedTargetShipPositionsInVerticalOrientation(secondShipYPosition, secondShipLength);
+            var ship3ExpectedOccupiedColumns = GetExpectedTargetShipPositions(thirdShipXPosition, thirdShipLength);
+
+            firstShipPlaced.Should().BeTrue();
+            ship1ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAt(firstShipXPosition, yPosition).Should().BeTrue());
+
+            secondShipPlaced.Should().BeTrue();
+            ship2ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAt(secondShipXPosition, yPosition).Should().BeTrue());
+
+            thirdShipPlaced.Should().BeTrue();
+            ship3ExpectedOccupiedColumns.ToList().ForEach(xPosition => board.IsShipAt(xPosition, thirdShipYPosition).Should().BeTrue());
+        }
+
+        [Fact]
+        public void MixureOfSuccessfulAndUnsuccessfulShipPlacements()
+        {
+            // Arrange and Act
+            BattleshipBoard board = new BattleshipBoard();
+
+            int anyXPosition = 2;
+            int anyYPosition = 2;
+            int anyShipLength = 3;
+
+            int firstShipXPosition = anyXPosition;
+            int firstShipYPosition = anyYPosition;
+            int firstShipLength = anyShipLength;
+            bool firstShipPlaced = board.PlaceShipAt(firstShipXPosition, firstShipYPosition, firstShipLength, ShipOrientation.Vertical);
+
+            int secondShipXPosition = firstShipXPosition;
+            int secondShipYPosition = firstShipYPosition + 2;
+            int secondShipLength = anyShipLength;
+            bool secondShipPlaced = board.PlaceShipAt(secondShipXPosition, secondShipYPosition, secondShipLength, ShipOrientation.Vertical);
+
+            int thirdShipXPosition = anyXPosition - 2;
+            int thirdShipYPosition = firstShipYPosition;
+            int thirdShipLength = 3;
+            bool thirdShipPlaced = board.PlaceShipAt(thirdShipXPosition, thirdShipYPosition, thirdShipLength, ShipOrientation.Horizontal);
+
+            // Assert
+            var ship1ExpectedOccupiedRows = GetExpectedTargetShipPositionsInVerticalOrientation(firstShipYPosition, firstShipLength);
+            var ship2ExpectedOccupiedRows = GetExpectedTargetShipPositionsInVerticalOrientation(secondShipYPosition, secondShipLength);
+            var ship3ExpectedOccupiedColumns = GetExpectedTargetShipPositions(thirdShipXPosition, thirdShipLength);
+
+            firstShipPlaced.Should().BeTrue();
+            ship1ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAt(firstShipXPosition, yPosition).Should().BeTrue());
+
+            secondShipPlaced.Should().BeFalse();
+
+            thirdShipPlaced.Should().BeFalse();
         }
 
         #region Helpers
