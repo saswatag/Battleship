@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace BattleshipStateTrackerTests
+namespace BattleshipStateTracker
 {
     public enum ShipOrientation
     {
