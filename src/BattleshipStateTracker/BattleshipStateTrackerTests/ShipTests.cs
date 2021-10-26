@@ -26,5 +26,15 @@ namespace BattleshipStateTrackerTests
             }.AsReadOnly();
             ship.OccupiedBoardPositions.Should().BeEquivalentTo(expectedOccupiedBoardPositions);
         }
+
+        [Fact]
+        public void AShipCannotOccupyInvalidPositions()
+        {
+            // Arrange and Act
+            Action newShipWithInvalidOccupiedPositionsAction = () => new Ship("Destroyer", new BoardPosition(2, 2), 10, ShipOrientation.Horizontal);
+
+            // Assert            
+            newShipWithInvalidOccupiedPositionsAction.Should().Throw<ArgumentException>();
+        }
     }
 }
