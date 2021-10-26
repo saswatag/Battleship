@@ -16,7 +16,8 @@ namespace BattleshipStateTracker
         const char OCCUPIED_SPOT_CHARACTER = '*';
         const int ROWS = 10;
         const int COLUMNS = 10;
-                
+        private Ship ship;
+
         private char[,] Board { get; } = new char[ROWS, COLUMNS];
 
         public int ShipCount { get; private set; }
@@ -25,6 +26,12 @@ namespace BattleshipStateTracker
         {
             InitializeEmptyBoard();
             ShipCount = 0;
+        }
+
+        public BattleshipBoard(Ship ship)
+        {
+            this.ship = ship;
+            ShipCount++;
         }
 
         public bool PlaceShipAt(int startingXPosition, int startingYPosition, int shipLength, ShipOrientation orientation)

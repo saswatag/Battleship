@@ -18,5 +18,17 @@ namespace BattleshipStateTrackerTests
             // Assert
             gameSetupAction.Should().Throw<ArgumentException>().WithMessage("Game cannot be started with empty boards");
         }
+
+        [Fact]
+        public void GameCanBeSetupIfBoardsArePopulatedWithSingleShip()
+        {
+            // Arrange and Act
+            var game = new BattleshipGame(new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)),
+                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+
+            // Assert
+            game.PlayerOneBoard.ShipCount.Should().Be(1);
+            game.PlayerTwoBoard.ShipCount.Should().Be(1);
+        }
     }
 }
