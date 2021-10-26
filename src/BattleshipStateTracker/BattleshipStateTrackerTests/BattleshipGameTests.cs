@@ -4,6 +4,7 @@ using FluentAssertions;
 using System.Linq;
 using System.Collections.ObjectModel;
 using BattleshipStateTracker;
+using System.Collections.Generic;
 
 namespace BattleshipStateTrackerTests
 {
@@ -29,6 +30,30 @@ namespace BattleshipStateTrackerTests
             // Assert
             game.PlayerOneBoard.ShipCount.Should().Be(1);
             game.PlayerTwoBoard.ShipCount.Should().Be(1);
+        }
+
+        [Fact]
+        public void GameCanBeSetupWithMultiShipBoardsWhereShipsDoNotOverlap()
+        {
+            // Arrange and Act
+            var shipsForBoard1 = new List<Ship>()
+            {
+                new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal),
+                new Ship("Destroyer", new BoardPosition(3, 3), 3, ShipOrientation.Horizontal),
+                new Ship("Destroyer", new BoardPosition(5, 5), 3, ShipOrientation.Vertical)
+            }.AsReadOnly();
+
+            var shipsForBoard2 = new List<Ship>()
+            {
+                new Ship("Destroyer", new BoardPosition(0, 0), 4, ShipOrientation.Horizontal),
+                new Ship("Destroyer", new BoardPosition(5, 5), 3, ShipOrientation.Vertical)
+            }.AsReadOnly();
+
+            var game = new BattleshipGame(new BattleshipBoard(shipsForBoard1), new BattleshipBoard(shipsForBoard2));
+
+            // Assert
+            game.PlayerOneBoard.ShipCount.Should().Be(shipsForBoard1.Count);
+            game.PlayerTwoBoard.ShipCount.Should().Be(shipsForBoard2.Count);
         }
     }
 }

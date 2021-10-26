@@ -17,10 +17,13 @@ namespace BattleshipStateTracker
         const int ROWS = 10;
         const int COLUMNS = 10;
         private Ship ship;
+        
 
         private char[,] Board { get; } = new char[ROWS, COLUMNS];
 
         public int ShipCount { get; private set; }
+
+        private ReadOnlyCollection<Ship> Ships { get; init; }
 
         public BattleshipBoard()
         {
@@ -32,6 +35,12 @@ namespace BattleshipStateTracker
         {
             this.ship = ship;
             ShipCount++;
+        }
+
+        public BattleshipBoard(ReadOnlyCollection<Ship> shipsForBoard)
+        {
+            this.Ships = shipsForBoard;
+            ShipCount = shipsForBoard.Count;
         }
 
         public bool PlaceShipAt(int startingXPosition, int startingYPosition, int shipLength, ShipOrientation orientation)
