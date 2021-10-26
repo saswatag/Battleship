@@ -18,5 +18,20 @@ namespace BattleshipStateTracker
             XPosition = xPosition;
             YPosition = yPosition;
         }
+
+        public override bool Equals(object obj)
+        {
+            BoardPosition otherPosition = obj as BoardPosition;
+
+            if (obj == null)
+                return false;
+
+            return this.XPosition == otherPosition.XPosition && this.YPosition == otherPosition.YPosition;
+        }
+
+        public override int GetHashCode()
+        {
+            return XPosition * 19 + YPosition;
+        }
     }
 }

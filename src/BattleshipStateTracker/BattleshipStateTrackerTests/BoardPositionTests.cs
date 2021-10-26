@@ -4,6 +4,7 @@ using FluentAssertions;
 using System.Linq;
 using System.Collections.ObjectModel;
 using BattleshipStateTracker;
+using System.Collections.Generic;
 
 namespace BattleshipStateTrackerTests
 {
@@ -36,5 +37,23 @@ namespace BattleshipStateTrackerTests
             invalidBoardPositionAction.Should().Throw<ArgumentException>().
                 WithMessage($"Both X and Y positions '({inValidXPositionInBoard}, {inValidYPositionInBoard})' should be in the range 0 to 9");
         }
+
+        [Theory]
+        [MemberData(nameof(BoardPositionValuesWithSameXAndYPositions))]
+        public void BoardPositions_With_Same_XPosition_And_XPosition_Are_Equal(BoardPosition[] boardPositions)
+        {
+            boardPositions.Distinct().Count().Should().Be(1);
+        }
+
+        #region Helpers
+        public static IEnumerable<object[]> BoardPositionValuesWithSameXAndYPositions()
+        {
+            return new List<object[]>
+            {
+                new object[] { new BoardPosition[] { new BoardPosition(3,3), new BoardPosition(3, 3) } },
+                new object[] { new BoardPosition[] { new BoardPosition(0,0), new BoardPosition(0, 0) } }
+            };
+        }
+        #endregion
     }
 }
