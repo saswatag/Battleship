@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -17,11 +18,20 @@ namespace BattleshipStateTracker
         const int ROWS = 10;
         const int COLUMNS = 10;
         private Ship ship;
-        
 
         private char[,] Board { get; } = new char[ROWS, COLUMNS];
 
+        private Dictionary<BoardPosition, Ship> ShipPlacements { get; init; }
+
         public int ShipCount { get; private set; }
+
+        //public int ShipCount 
+        //{
+        //    get
+        //    {
+        //        return Ships is not null ? Ships.Count : 0;
+        //    }
+        //}
 
         private ReadOnlyCollection<Ship> Ships { get; init; }
 
@@ -39,6 +49,9 @@ namespace BattleshipStateTracker
 
         public BattleshipBoard(ReadOnlyCollection<Ship> shipsForBoard)
         {
+            if (Ships.Any(ship => !PlaceShip(ship)))
+                throw new ArgumentException("Board couldn't accomodate all ships. Some ship positions overlap.");
+
             this.Ships = shipsForBoard;
             ShipCount = shipsForBoard.Count;
         }
@@ -65,6 +78,11 @@ namespace BattleshipStateTracker
                 return false;
         }
 
+        public bool IsShipAtNew(int startingXPosition, int startingYPosition)
+        {
+            return ShipPlacements.ContainsKey(new BoardPosition(startingXPosition, startingYPosition));
+        }
+
         public bool IsShipAt(int startingXPosition, int startingYPosition)
         {
             return Board[startingXPosition, startingYPosition].Equals(OCCUPIED_SPOT_CHARACTER);
@@ -79,6 +97,19 @@ namespace BattleshipStateTracker
             return true;
         }
 
+        private bool PlaceShip(Ship ship)
+        {
+            if (CanBoardAccomodateShip(ship))
+            {
+                foreach(var boardPosition in ship.OccupiedBoardPositions)
+                    ShipPlacements.Add(boardPosition, ship);
+
+                return true;
+            }
+            else
+                return false;
+        }
+
         private void InitializeEmptyBoard()
         {
             for(int rowIndex = 0; rowIndex < Board.GetLength(0); rowIndex++)
@@ -86,6 +117,14 @@ namespace BattleshipStateTracker
                 for (int columnIndex = 0; columnIndex < Board.GetLength(1); columnIndex++)
                     Board[rowIndex, columnIndex] = FREE_SPOT_CHARACTER;
             }
+        }
+
+        private bool CanBoardAccomodateShip(Ship ship)
+        {
+            if (ship.OccupiedBoardPositions.Any(position => IsShipAtNew(ship.PositionedAt.XPosition, ship.PositionedAt.YPosition)))
+                return false;
+
+            return true;
         }
 
         private bool CanShipBePlacedAt(int startingXPosition, int startingYPosition, int shipLength, ShipOrientation orientation)

@@ -11,7 +11,7 @@ namespace BattleshipStateTrackerTests
     public class BattleshipGameTests
     {
         [Fact]
-        public void CannotSetupGameWithEmptyBoards()
+        public void Cannot_SetupGame_WithEmptyBoards()
         {
             // Arrange and Act
             Action gameSetupAction = () => new BattleshipGame(new BattleshipBoard(), new BattleshipBoard());
@@ -33,7 +33,7 @@ namespace BattleshipStateTrackerTests
         }
 
         [Fact]
-        public void GameCanBeSetupWithMultiShipBoardsWhereShipsDoNotOverlap()
+        public void Game_CanBe_Setup_With_MultiShipBoards_Where_ShipsDoNotOverlap()
         {
             // Arrange and Act
             var shipsForBoard1 = new List<Ship>()
@@ -54,6 +54,29 @@ namespace BattleshipStateTrackerTests
             // Assert
             game.PlayerOneBoard.ShipCount.Should().Be(shipsForBoard1.Count);
             game.PlayerTwoBoard.ShipCount.Should().Be(shipsForBoard2.Count);
+        }
+
+        [Fact]
+        public void Game_CannotBe_Setup_With_MultiShipBoards_Where_ShipsOverlap()
+        {
+            // Arrange and Act
+            var shipsForBoard1 = new List<Ship>()
+            {
+                new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal),
+                new Ship("Destroyer", new BoardPosition(4, 2), 3, ShipOrientation.Horizontal),
+                new Ship("Destroyer", new BoardPosition(5, 5), 3, ShipOrientation.Vertical)
+            }.AsReadOnly();
+
+            var shipsForBoard2 = new List<Ship>()
+            {
+                new Ship("Destroyer", new BoardPosition(0, 0), 4, ShipOrientation.Horizontal),
+                new Ship("Destroyer", new BoardPosition(3, 0), 3, ShipOrientation.Vertical)
+            }.AsReadOnly();
+            
+            Action newGameAction = () => new BattleshipGame(new BattleshipBoard(shipsForBoard1), new BattleshipBoard(shipsForBoard2));
+
+            // Assert
+            newGameAction.Should().Throw<ArgumentException>();
         }
     }
 }
