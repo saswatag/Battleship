@@ -39,19 +39,36 @@ namespace BattleshipStateTrackerTests
         }
 
         [Theory]
-        [MemberData(nameof(BoardPositionValuesWithSameXAndYPositions))]
+        [MemberData(nameof(FewBoardPositionValuesWithSameXAndYPositions))]
         public void BoardPositions_With_Same_XPosition_And_XPosition_Are_Equal(BoardPosition[] boardPositions)
         {
             boardPositions.Distinct().Count().Should().Be(1);
         }
 
+        [Theory]
+        [MemberData(nameof(FewBoardPositionValuesWithDifferentXAndYPositions))]
+        public void BoardPositions_With_Different_XPosition_And_XPosition_Are_UnEqual(BoardPosition[] boardPositions)
+        {
+            Assert.True(boardPositions.Distinct().Count().Equals(boardPositions.Count()));
+        }
+
         #region Helpers
-        public static IEnumerable<object[]> BoardPositionValuesWithSameXAndYPositions()
+        public static IEnumerable<object[]> FewBoardPositionValuesWithSameXAndYPositions()
         {
             return new List<object[]>
             {
                 new object[] { new BoardPosition[] { new BoardPosition(3,3), new BoardPosition(3, 3) } },
                 new object[] { new BoardPosition[] { new BoardPosition(0,0), new BoardPosition(0, 0) } }
+            };
+        }
+
+        public static IEnumerable<object[]> FewBoardPositionValuesWithDifferentXAndYPositions()
+        {
+            return new List<object[]>
+            {
+                new object[] { new BoardPosition[] { new BoardPosition(3,2), new BoardPosition(2, 3) } },
+                new object[] { new BoardPosition[] { new BoardPosition(0,9), new BoardPosition(9, 0) } },
+                new object[] { new BoardPosition[] { new BoardPosition(1,6), new BoardPosition(5, 6) } }
             };
         }
         #endregion
