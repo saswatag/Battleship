@@ -24,16 +24,6 @@ namespace BattleshipStateTrackerTests
         }
 
         [Fact]
-        public void SetupAnEmptyBoard()
-        {
-            // Arrange and Act
-            BattleshipBoard board = new BattleshipBoard();
-
-            // Assert
-            board.IsEmpty().Should().BeTrue();
-        }
-
-        [Fact]
         public void PlacingBatleshipUpdatesBoardOccupancy()
         {
             // Arrange and Act

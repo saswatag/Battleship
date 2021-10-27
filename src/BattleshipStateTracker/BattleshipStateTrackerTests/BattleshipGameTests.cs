@@ -11,16 +11,6 @@ namespace BattleshipStateTrackerTests
     public class BattleshipGameTests
     {
         [Fact]
-        public void Cannot_SetupGame_WithEmptyBoards()
-        {
-            // Arrange and Act
-            Action gameSetupAction = () => new BattleshipGame(new BattleshipBoard(), new BattleshipBoard());
-
-            // Assert
-            gameSetupAction.Should().Throw<ArgumentException>().WithMessage("Game cannot be started with empty boards");
-        }
-
-        [Fact]
         public void GameCanBeSetupIfBoardsArePopulatedWithSingleShip()
         {
             // Arrange and Act

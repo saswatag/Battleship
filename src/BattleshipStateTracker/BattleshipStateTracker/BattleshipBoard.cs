@@ -27,14 +27,6 @@ namespace BattleshipStateTracker
 
         private int SunkCount { get; set; }
 
-        public BattleshipBoard()
-        {
-            ShipPlacements = new Dictionary<BoardPosition, Ship>();
-            Ships = new ReadOnlyCollection<Ship>(new List<Ship>());
-            Attacks = new List<BoardPosition>();
-            SunkCount = 0;
-        }
-
         public BattleshipBoard(Ship ship) : this(new List<Ship>() { ship }.AsReadOnly())
         {
         }
