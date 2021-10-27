@@ -15,6 +15,8 @@ namespace BattleshipStateTracker
     {
         private Dictionary<BoardPosition, Ship> ShipPlacements { get; init; }
         private ReadOnlyCollection<Ship> Ships { get; init; }
+        private List<BoardPosition> Attacks { get; init; } 
+
         public int ShipCount
         {
             get
@@ -27,6 +29,7 @@ namespace BattleshipStateTracker
         {
             ShipPlacements = new Dictionary<BoardPosition, Ship>();
             Ships = new ReadOnlyCollection<Ship>(new List<Ship>());
+            Attacks = new List<BoardPosition>();
         }
 
         public BattleshipBoard(Ship ship) : this(new List<Ship>() { ship }.AsReadOnly())
@@ -40,6 +43,8 @@ namespace BattleshipStateTracker
                 throw new ArgumentException("Board couldn't accomodate all ships. Some ship positions overlap.");
 
             this.Ships = shipsForBoard;
+
+            Attacks = new List<BoardPosition>();
         }
 
         public bool IsShipAt(int startingXPosition, int startingYPosition)
@@ -50,6 +55,17 @@ namespace BattleshipStateTracker
         public bool IsEmpty()
         {
             return ShipCount.Equals(0) ? true : false;
+        }
+
+        public bool HasShipAtPositionSunk(BoardPosition attackPosition)
+        {
+            Attacks.Add(attackPosition);
+            var shipUnderAttack = ShipPlacements[attackPosition];
+
+            if (shipUnderAttack.OccupiedBoardPositions.Intersect(Attacks).ToList().Count.Equals(shipUnderAttack.OccupiedBoardPositions.Count))
+                return true;
+
+            return false;
         }
 
         private bool PlaceShip(Ship ship)

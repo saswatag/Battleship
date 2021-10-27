@@ -117,5 +117,22 @@ namespace BattleshipStateTrackerTests
             // Assert
             attackHit.Should().Be(AttackResponse.Miss);
         }
+
+        [Fact]
+        public void Attack_On_AllShipPositions_SinksTheShip()
+        {
+            var game = new BattleshipGame(new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)),
+                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+
+            // Assert
+            var attack1 = game.AttackPlayerOneAt(new BoardPosition(2, 2));
+            var attack2 = game.AttackPlayerOneAt(new BoardPosition(3, 2));
+            var attack3 = game.AttackPlayerOneAt(new BoardPosition(4, 2));
+            var attack4 = game.AttackPlayerOneAt(new BoardPosition(5, 2));
+
+            // Assert
+            attack4.Should().Be(AttackResponse.HitAndSunk);
+
+        }
     }
 }

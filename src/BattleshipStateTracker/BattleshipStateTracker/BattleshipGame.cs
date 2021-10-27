@@ -30,7 +30,12 @@ namespace BattleshipStateTracker
         public (bool Hit, bool SunkShip, bool GameWon) AttackPlayerOneAt(BoardPosition attackPosition)
         {
             if(PlayerOneBoard.IsShipAt(attackPosition.XPosition, attackPosition.YPosition))
-                return AttackResponse.Hit;
+            {
+                if (PlayerOneBoard.HasShipAtPositionSunk(attackPosition))
+                    return AttackResponse.HitAndSunk;
+                else
+                    return AttackResponse.Hit;
+            }
 
             return AttackResponse.Miss;
         }
