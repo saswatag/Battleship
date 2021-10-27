@@ -14,12 +14,13 @@ namespace BattleshipStateTrackerTests
         public void GameCanBeSetupIfBoardsArePopulatedWithSingleShip()
         {
             // Arrange and Act
-            var game = new BattleshipGame(new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)),
-                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player1 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player2 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var game = new BattleshipGame(player1, player2);
 
             // Assert
-            game.PlayerOneBoard.ShipCount.Should().Be(1);
-            game.PlayerTwoBoard.ShipCount.Should().Be(1);
+            game.PlayerOne.ShipCount.Should().Be(1);
+            game.PlayerTwo.ShipCount.Should().Be(1);
         }
 
         [Fact]
@@ -39,11 +40,13 @@ namespace BattleshipStateTrackerTests
                 new Ship("Destroyer", new BoardPosition(5, 5), 3, ShipOrientation.Vertical)
             }.AsReadOnly();
 
-            var game = new BattleshipGame(new BattleshipBoard(shipsForBoard1), new BattleshipBoard(shipsForBoard2));
+            var player1 = new Player("Player 1", new BattleshipBoard(shipsForBoard1));
+            var player2 = new Player("Player 1", new BattleshipBoard(shipsForBoard2));
+            var game = new BattleshipGame(player1, player2);
 
             // Assert
-            game.PlayerOneBoard.ShipCount.Should().Be(shipsForBoard1.Count);
-            game.PlayerTwoBoard.ShipCount.Should().Be(shipsForBoard2.Count);
+            game.PlayerOne.ShipCount.Should().Be(shipsForBoard1.Count);
+            game.PlayerTwo.ShipCount.Should().Be(shipsForBoard2.Count);
         }
 
         [Fact]
@@ -62,8 +65,8 @@ namespace BattleshipStateTrackerTests
                 new Ship("Destroyer", new BoardPosition(0, 0), 4, ShipOrientation.Horizontal),
                 new Ship("Destroyer", new BoardPosition(3, 0), 3, ShipOrientation.Vertical)
             }.AsReadOnly();
-            
-            Action newGameAction = () => new BattleshipGame(new BattleshipBoard(shipsForBoard1), new BattleshipBoard(shipsForBoard2));
+
+            Action newGameAction = () => new BattleshipGame(new Player("Player 1", new BattleshipBoard(shipsForBoard1)), new Player("Player 1", new BattleshipBoard(shipsForBoard2)));
 
             // Assert
             newGameAction.Should().Throw<ArgumentException>();
@@ -72,8 +75,9 @@ namespace BattleshipStateTrackerTests
         [Fact]
         public void Any_Valid_BoardPosition_CanBe_Attacked()
         {
-            var game = new BattleshipGame(new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)),
-                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player1 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player2 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var game = new BattleshipGame(player1, player2);
 
             // Assert
             Action attackAction = () => game.AttackPlayerOneAt(new BoardPosition(2, 2));
@@ -85,8 +89,9 @@ namespace BattleshipStateTrackerTests
         [Fact]
         public void Attack_OnShipPosition_IsA_Hit()
         {
-            var game = new BattleshipGame(new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)),
-                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player1 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player2 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var game = new BattleshipGame(player1, player2);
 
             // Assert
             var attackHit = game.AttackPlayerOneAt(new BoardPosition(2, 2));
@@ -98,8 +103,9 @@ namespace BattleshipStateTrackerTests
         [Fact]
         public void Attack_Not_OnShipPosition_IsA_Miss()
         {
-            var game = new BattleshipGame(new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)),
-                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player1 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player2 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var game = new BattleshipGame(player1, player2);
 
             // Assert
             var attackHit = game.AttackPlayerOneAt(new BoardPosition(0, 1));
@@ -111,8 +117,9 @@ namespace BattleshipStateTrackerTests
         [Fact]
         public void Attack_On_AllShipPositions_SinksTheShip()
         {
-            var game = new BattleshipGame(new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)),
-                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player1 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player2 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var game = new BattleshipGame(player1, player2);
 
             // Assert
             game.AttackPlayerOneAt(new BoardPosition(2, 2)).Should().Be(AttackResponse.Hit);
@@ -124,8 +131,9 @@ namespace BattleshipStateTrackerTests
         [Fact]
         public void CombinationOf_HitAndMiss_To_AllShipPositions_SinksTheShip()
         {
-            var game = new BattleshipGame(new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)),
-                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player1 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player2 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var game = new BattleshipGame(player1, player2);
 
             // Assert
             game.AttackPlayerOneAt(new BoardPosition(2, 2)).Should().Be(AttackResponse.Hit);
@@ -139,8 +147,9 @@ namespace BattleshipStateTrackerTests
         [Fact]
         public void Sinking_TheOnlyShipOnTheBoard_Is_A_Win()
         {
-            var game = new BattleshipGame(new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)),
-                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player1 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player2 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var game = new BattleshipGame(player1, player2);
 
             // Assert
             game.AttackPlayerOneAt(new BoardPosition(2, 2)).Should().Be(AttackResponse.Hit);
@@ -152,7 +161,7 @@ namespace BattleshipStateTrackerTests
         }
 
         [Fact]
-        public void Sinking_AllShips_Is_A_Win()
+        public void Sinking_AllShips_Is_A_Win_New()
         {
             var player1Ships = new List<Ship>()
             {
@@ -160,8 +169,9 @@ namespace BattleshipStateTrackerTests
                 new Ship("Destroyer 2", new BoardPosition(2, 4), 2, ShipOrientation.Vertical),
                 new Ship("Destroyer 3", new BoardPosition(4, 4), 4, ShipOrientation.Horizontal),
             }.AsReadOnly();
-            var game = new BattleshipGame(new BattleshipBoard(player1Ships),
-                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player1 = new Player("Player 1", new BattleshipBoard(player1Ships));
+            var player2 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var game = new BattleshipGame(player1, player2);
 
             // Assert
             game.AttackPlayerOneAt(new BoardPosition(2, 2)).Should().Be(AttackResponse.Hit);

@@ -11,38 +11,47 @@ namespace BattleshipStateTracker
         public static (bool Hit, bool SunkShip, bool GameWon) HitAndSunk = (Hit: true, SunkShip: true, GameWon: false);
 
         public static (bool Hit, bool SunkShip, bool GameWon) SunkAndWon = (Hit: true, SunkShip: true, GameWon: true);
+
+        public static (bool Hit, bool SunkShip, bool GameWon) AlreadyWon = (Hit: false, SunkShip: false, GameWon: true);
     }
 
     public class BattleshipGame
     {
-        public BattleshipBoard PlayerOneBoard { get; init; }
-        public BattleshipBoard PlayerTwoBoard { get; init; }
+        public Player PlayerOne { get; init; }
+        public Player PlayerTwo { get; init; }
 
-        public BattleshipGame(BattleshipBoard battleshipBoard1, BattleshipBoard battleshipBoard2)
+        public BattleshipGame(Player player1, Player player2)
         {
-            if (battleshipBoard1.IsEmpty() || battleshipBoard2.IsEmpty())
+            if (player1.Board.IsEmpty() || player2.Board.IsEmpty())
                 throw new ArgumentException("Game cannot be started with empty boards");
 
-            PlayerOneBoard = battleshipBoard1;
-            PlayerTwoBoard = battleshipBoard2;
+            PlayerOne = player1;
+            PlayerTwo = player2;
         }
 
         public (bool Hit, bool SunkShip, bool GameWon) AttackPlayerOneAt(BoardPosition attackPosition)
         {
-            if(PlayerOneBoard.IsShipAt(attackPosition.XPosition, attackPosition.YPosition))
-            {
-                if (PlayerOneBoard.HasShipAtPositionSunk(attackPosition))
-                {
-                    if (PlayerOneBoard.HaveAllShipsSunk())
-                        return AttackResponse.SunkAndWon;
-                    else
-                        return AttackResponse.HitAndSunk;
-                }
-                else
-                    return AttackResponse.Hit;
-            }
+            if (PlayerOne.LostGame)
+                return AttackResponse.AlreadyWon; //already lost game
 
-            return AttackResponse.Miss;
+            var attackResponse = PlayerOne.TakeAttack(attackPosition);
+            switch (attackResponse)
+            {
+                case AttackResponseNew.Hit:
+                    return AttackResponse.Hit;
+
+                case AttackResponseNew.HitAndSunk:
+                    {
+                        if (PlayerOne.LostGame)
+                            return AttackResponse.SunkAndWon;
+                        else
+                            return AttackResponse.HitAndSunk;
+                    }
+
+                default:
+                    return AttackResponse.Miss;
+                    
+            }
         }
     }
 }
