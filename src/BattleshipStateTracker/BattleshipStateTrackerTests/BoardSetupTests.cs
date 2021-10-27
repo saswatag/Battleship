@@ -130,7 +130,7 @@ namespace BattleshipStateTrackerTests
             // Assert
             var allExpectedOccupiedRows = GetExpectedTargetShipPositionsInVerticalOrientation(anyYPosition, anyShipLength);
             allExpectedOccupiedRows.ToList().ForEach(x => board.IsShipAtNew(anyXPosition, x).Should().BeTrue());
-            board.IsEmpty().Should().BeFalse();
+            board.IsEmptyNew().Should().BeFalse();
         }
 
         [Fact]
