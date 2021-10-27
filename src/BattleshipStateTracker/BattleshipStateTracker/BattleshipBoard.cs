@@ -39,8 +39,8 @@ namespace BattleshipStateTracker
             InitializeEmptyBoard();
             ShipCount = 0;
 
-            //ShipPlacements = new Dictionary<BoardPosition, Ship>();
-            //Ships = new ReadOnlyCollection<Ship>(new List<Ship>());
+            ShipPlacements = new Dictionary<BoardPosition, Ship>();
+            Ships = new ReadOnlyCollection<Ship>(new List<Ship>());
         }
 
         public BattleshipBoard(Ship ship) : this(new List<Ship>() { ship }.AsReadOnly())
@@ -98,6 +98,11 @@ namespace BattleshipStateTracker
             return true;
         }
 
+        public bool IsEmptyNew()
+        {
+            return ShipCount.Equals(0) ? true : false;
+        }
+
         private bool PlaceShip(Ship ship)
         {
             if (CanBoardAccomodateShip(ship))
@@ -122,7 +127,7 @@ namespace BattleshipStateTracker
 
         private bool CanBoardAccomodateShip(Ship ship)
         {
-            if (ship.OccupiedBoardPositions.Any(position => IsShipAtNew(ship.PositionedAt.XPosition, ship.PositionedAt.YPosition)))
+            if (ship.OccupiedBoardPositions.Any(position => IsShipAtNew(position.XPosition, position.YPosition)))
                 return false;
 
             return true;
