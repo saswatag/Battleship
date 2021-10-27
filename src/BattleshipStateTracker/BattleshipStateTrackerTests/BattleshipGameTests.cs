@@ -99,10 +99,10 @@ namespace BattleshipStateTrackerTests
                 new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
 
             // Assert
-            bool attackHit = game.AttackPlayerOneAt(new BoardPosition(2, 2));
+            var attackHit = game.AttackPlayerOneAt(new BoardPosition(2, 2));
 
             // Assert
-            attackHit.Should().BeTrue();
+            attackHit.Should().Be(AttackResponse.Hit);
         }
 
         [Fact]
@@ -112,10 +112,10 @@ namespace BattleshipStateTrackerTests
                 new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
 
             // Assert
-            bool attackHit = game.AttackPlayerOneAt(new BoardPosition(0, 1));
+            var attackHit = game.AttackPlayerOneAt(new BoardPosition(0, 1));
 
             // Assert
-            attackHit.Should().BeFalse();
+            attackHit.Should().Be(AttackResponse.Miss);
         }
     }
 }

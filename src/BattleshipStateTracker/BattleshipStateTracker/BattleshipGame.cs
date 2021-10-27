@@ -2,6 +2,17 @@
 
 namespace BattleshipStateTracker
 {
+    public static class AttackResponse
+    {
+        public static (bool Hit, bool SunkShip, bool GameWon) Hit = (Hit: true, SunkShip: false, GameWon: false);
+
+        public static (bool Hit, bool SunkShip, bool GameWon) Miss = (Hit: false, SunkShip: false, GameWon: false);
+
+        public static (bool Hit, bool SunkShip, bool GameWon) HitAndSunk = (Hit: true, SunkShip: true, GameWon: false);
+
+        public static (bool Hit, bool SunkShip, bool GameWon) SunkAndWon = (Hit: true, SunkShip: true, GameWon: true);
+    }
+
     public class BattleshipGame
     {
         public BattleshipBoard PlayerOneBoard { get; init; }
@@ -16,12 +27,12 @@ namespace BattleshipStateTracker
             PlayerTwoBoard = battleshipBoard2;
         }
 
-        public bool AttackPlayerOneAt(BoardPosition attackPosition)
+        public (bool Hit, bool SunkShip, bool GameWon) AttackPlayerOneAt(BoardPosition attackPosition)
         {
             if(PlayerOneBoard.IsShipAt(attackPosition.XPosition, attackPosition.YPosition))
-                return true;
+                return AttackResponse.Hit;
 
-            return false;
+            return AttackResponse.Miss;
         }
     }
 }
