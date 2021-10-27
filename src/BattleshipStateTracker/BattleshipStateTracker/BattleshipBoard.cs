@@ -36,9 +36,6 @@ namespace BattleshipStateTracker
 
         public BattleshipBoard()
         {
-            InitializeEmptyBoard();
-            ShipCount = 0;
-
             ShipPlacements = new Dictionary<BoardPosition, Ship>();
             Ships = new ReadOnlyCollection<Ship>(new List<Ship>());
         }
