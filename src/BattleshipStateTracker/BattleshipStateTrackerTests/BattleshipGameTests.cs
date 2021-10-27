@@ -78,5 +78,18 @@ namespace BattleshipStateTrackerTests
             // Assert
             newGameAction.Should().Throw<ArgumentException>();
         }
+
+        [Fact]
+        public void Any_Valid_BoardPosition_CanBe_Attacked()
+        {
+            var game = new BattleshipGame(new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)),
+                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+
+            // Assert
+            Action attackAction = () => game.AttackPlayerOneAt(new BoardPosition(2, 2));
+
+            // Assert
+            attackAction.Should().NotThrow<ArgumentException>();
+        }
     }
 }

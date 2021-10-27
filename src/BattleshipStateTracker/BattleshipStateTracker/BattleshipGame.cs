@@ -15,5 +15,10 @@ namespace BattleshipStateTracker
             PlayerOneBoard = battleshipBoard1;
             PlayerTwoBoard = battleshipBoard2;
         }
+
+        public bool AttackPlayerOneAt(BoardPosition attackPosition)
+        {
+            return true;
+        }
     }
 }
