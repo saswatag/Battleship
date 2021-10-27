@@ -10,9 +10,9 @@ namespace BattleshipStateTracker
 
         public static (bool Hit, bool SunkShip, bool GameWon) HitAndSunk = (Hit: true, SunkShip: true, GameWon: false);
 
-        public static (bool Hit, bool SunkShip, bool GameWon) SunkAndWon = (Hit: true, SunkShip: true, GameWon: true);
+        public static (bool Hit, bool SunkShip, bool GameWon) SunkAndLost = (Hit: true, SunkShip: true, GameWon: true);
 
-        public static (bool Hit, bool SunkShip, bool GameWon) AlreadyWon = (Hit: false, SunkShip: false, GameWon: true);
+        public static (bool Hit, bool SunkShip, bool GameWon) AlreadyLost = (Hit: false, SunkShip: false, GameWon: true);
     }
 
     public class BattleshipGame
@@ -32,7 +32,7 @@ namespace BattleshipStateTracker
         public (bool Hit, bool SunkShip, bool GameWon) AttackPlayerOneAt(BoardPosition attackPosition)
         {
             if (PlayerOne.LostGame)
-                return AttackResponse.AlreadyWon; //already lost game
+                return AttackResponse.AlreadyLost;
 
             var attackResponse = PlayerOne.TakeAttack(attackPosition);
             switch (attackResponse)
@@ -43,7 +43,7 @@ namespace BattleshipStateTracker
                 case AttackResponseNew.HitAndSunk:
                     {
                         if (PlayerOne.LostGame)
-                            return AttackResponse.SunkAndWon;
+                            return AttackResponse.SunkAndLost;
                         else
                             return AttackResponse.HitAndSunk;
                     }
