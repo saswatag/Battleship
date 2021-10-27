@@ -125,14 +125,25 @@ namespace BattleshipStateTrackerTests
                 new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
 
             // Assert
-            var attack1 = game.AttackPlayerOneAt(new BoardPosition(2, 2));
-            var attack2 = game.AttackPlayerOneAt(new BoardPosition(3, 2));
-            var attack3 = game.AttackPlayerOneAt(new BoardPosition(4, 2));
-            var attack4 = game.AttackPlayerOneAt(new BoardPosition(5, 2));
+            game.AttackPlayerOneAt(new BoardPosition(2, 2)).Should().Be(AttackResponse.Hit);
+            game.AttackPlayerOneAt(new BoardPosition(3, 2)).Should().Be(AttackResponse.Hit);
+            game.AttackPlayerOneAt(new BoardPosition(4, 2)).Should().Be(AttackResponse.Hit);
+            game.AttackPlayerOneAt(new BoardPosition(5, 2)).Should().Be(AttackResponse.HitAndSunk);
+        }
+
+        [Fact]
+        public void CombinationOf_HitAndMiss_To_AllShipPositions_SinksTheShip()
+        {
+            var game = new BattleshipGame(new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)),
+                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
 
             // Assert
-            attack4.Should().Be(AttackResponse.HitAndSunk);
-
+            game.AttackPlayerOneAt(new BoardPosition(2, 2)).Should().Be(AttackResponse.Hit);
+            game.AttackPlayerOneAt(new BoardPosition(2, 1)).Should().Be(AttackResponse.Miss);
+            game.AttackPlayerOneAt(new BoardPosition(2, 3)).Should().Be(AttackResponse.Miss);
+            game.AttackPlayerOneAt(new BoardPosition(3, 2)).Should().Be(AttackResponse.Hit);
+            game.AttackPlayerOneAt(new BoardPosition(4, 2)).Should().Be(AttackResponse.Hit);
+            game.AttackPlayerOneAt(new BoardPosition(5, 2)).Should().Be(AttackResponse.HitAndSunk);
         }
     }
 }
