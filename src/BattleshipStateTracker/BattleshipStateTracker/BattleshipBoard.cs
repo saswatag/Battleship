@@ -25,11 +25,14 @@ namespace BattleshipStateTracker
             }
         }
 
+        private int SunkCount { get; set; }
+
         public BattleshipBoard()
         {
             ShipPlacements = new Dictionary<BoardPosition, Ship>();
             Ships = new ReadOnlyCollection<Ship>(new List<Ship>());
             Attacks = new List<BoardPosition>();
+            SunkCount = 0;
         }
 
         public BattleshipBoard(Ship ship) : this(new List<Ship>() { ship }.AsReadOnly())
@@ -45,11 +48,18 @@ namespace BattleshipStateTracker
             this.Ships = shipsForBoard;
 
             Attacks = new List<BoardPosition>();
+
+            SunkCount = 0;
         }
 
         public bool IsShipAt(int startingXPosition, int startingYPosition)
         {
             return ShipPlacements.ContainsKey(new BoardPosition(startingXPosition, startingYPosition));
+        }
+
+        public bool HaveAllShipsSunk()
+        {
+            return SunkCount.Equals(Ships.Count);
         }
 
         public bool IsEmpty()
@@ -63,7 +73,10 @@ namespace BattleshipStateTracker
             var shipUnderAttack = ShipPlacements[attackPosition];
 
             if (shipUnderAttack.OccupiedBoardPositions.Intersect(Attacks).ToList().Count.Equals(shipUnderAttack.OccupiedBoardPositions.Count))
+            {
+                SunkCount++;
                 return true;
+            }
 
             return false;
         }
