@@ -18,7 +18,10 @@ namespace BattleshipStateTracker
 
         public bool AttackPlayerOneAt(BoardPosition attackPosition)
         {
-            return true;
+            if(PlayerOneBoard.IsShipAt(attackPosition.XPosition, attackPosition.YPosition))
+                return true;
+
+            return false;
         }
     }
 }

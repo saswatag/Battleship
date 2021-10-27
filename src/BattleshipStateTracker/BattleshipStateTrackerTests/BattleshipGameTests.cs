@@ -91,5 +91,31 @@ namespace BattleshipStateTrackerTests
             // Assert
             attackAction.Should().NotThrow<ArgumentException>();
         }
+
+        [Fact]
+        public void Attack_OnShipPosition_IsA_Hit()
+        {
+            var game = new BattleshipGame(new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)),
+                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+
+            // Assert
+            bool attackHit = game.AttackPlayerOneAt(new BoardPosition(2, 2));
+
+            // Assert
+            attackHit.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Attack_Not_OnShipPosition_IsA_Miss()
+        {
+            var game = new BattleshipGame(new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)),
+                new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+
+            // Assert
+            bool attackHit = game.AttackPlayerOneAt(new BoardPosition(0, 1));
+
+            // Assert
+            attackHit.Should().BeFalse();
+        }
     }
 }
