@@ -52,6 +52,16 @@ namespace BattleshipStateTrackerTests
             Assert.True(boardPositions.Distinct().Count().Equals(boardPositions.Count()));
         }
 
+        [Fact]
+        public void BoardPositionHasExpectedTextDescription()
+        {
+            // Arrange and Act
+            BoardPosition position = new BoardPosition(2, 2);
+
+            // Assert
+            position.ToString().Should().Be("(2, 2)");
+        }
+
         #region Helpers
         public static IEnumerable<object[]> FewBoardPositionValuesWithSameXAndYPositions()
         {

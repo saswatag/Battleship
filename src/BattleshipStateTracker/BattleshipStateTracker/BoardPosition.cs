@@ -33,5 +33,10 @@ namespace BattleshipStateTracker
         {
             return XPosition * 19 + YPosition;
         }
+
+        public override string ToString()
+        {
+            return $"({XPosition}, {YPosition})";
+        }
     }
 }
