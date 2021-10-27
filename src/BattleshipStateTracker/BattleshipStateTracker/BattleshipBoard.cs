@@ -17,13 +17,14 @@ namespace BattleshipStateTracker
         const char OCCUPIED_SPOT_CHARACTER = '*';
         const int ROWS = 10;
         const int COLUMNS = 10;
-        private Ship ship;
 
         private char[,] Board { get; } = new char[ROWS, COLUMNS];
 
         private Dictionary<BoardPosition, Ship> ShipPlacements { get; init; }
 
         public int ShipCount { get; private set; }
+
+        private ReadOnlyCollection<Ship> Ships { get; init; }
 
         //public int ShipCount 
         //{
@@ -33,23 +34,23 @@ namespace BattleshipStateTracker
         //    }
         //}
 
-        private ReadOnlyCollection<Ship> Ships { get; init; }
-
         public BattleshipBoard()
         {
             InitializeEmptyBoard();
             ShipCount = 0;
+
+            //ShipPlacements = new Dictionary<BoardPosition, Ship>();
+            //Ships = new ReadOnlyCollection<Ship>(new List<Ship>());
         }
 
-        public BattleshipBoard(Ship ship)
+        public BattleshipBoard(Ship ship) : this(new List<Ship>() { ship }.AsReadOnly())
         {
-            this.ship = ship;
-            ShipCount++;
         }
 
         public BattleshipBoard(ReadOnlyCollection<Ship> shipsForBoard)
         {
-            if (Ships.Any(ship => !PlaceShip(ship)))
+            ShipPlacements = new Dictionary<BoardPosition, Ship>();
+            if (shipsForBoard.Any(ship => !PlaceShip(ship)))
                 throw new ArgumentException("Board couldn't accomodate all ships. Some ship positions overlap.");
 
             this.Ships = shipsForBoard;
@@ -58,14 +59,14 @@ namespace BattleshipStateTracker
 
         public bool PlaceShipAt(int startingXPosition, int startingYPosition, int shipLength, ShipOrientation orientation)
         {
-            if(CanShipBePlacedAt(startingXPosition, startingYPosition, shipLength, orientation))
+            if (CanShipBePlacedAt(startingXPosition, startingYPosition, shipLength, orientation))
             {
                 if (orientation == ShipOrientation.Horizontal)
                 {
                     for (int count = 0; count < shipLength; count++)
                         Board[startingXPosition + count, startingYPosition] = OCCUPIED_SPOT_CHARACTER;
                 }
-                else if(orientation == ShipOrientation.Vertical)
+                else if (orientation == ShipOrientation.Vertical)
                 {
                     for (int count = 0; count < shipLength; count++)
                         Board[startingXPosition, startingYPosition + count] = OCCUPIED_SPOT_CHARACTER;
