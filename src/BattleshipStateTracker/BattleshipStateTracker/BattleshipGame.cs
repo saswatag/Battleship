@@ -9,7 +9,7 @@ namespace BattleshipStateTracker
 
         public BattleshipGame(BattleshipBoard battleshipBoard1, BattleshipBoard battleshipBoard2)
         {
-            if (battleshipBoard1.IsEmptyNew() || battleshipBoard2.IsEmptyNew())
+            if (battleshipBoard1.IsEmpty() || battleshipBoard2.IsEmpty())
                 throw new ArgumentException("Game cannot be started with empty boards");
 
             PlayerOneBoard = battleshipBoard1;

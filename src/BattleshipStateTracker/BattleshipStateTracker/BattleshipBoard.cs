@@ -13,26 +13,15 @@ namespace BattleshipStateTracker
 
     public class BattleshipBoard
     {
-        const char FREE_SPOT_CHARACTER = '.';
-        const char OCCUPIED_SPOT_CHARACTER = '*';
-        const int ROWS = 10;
-        const int COLUMNS = 10;
-
-        private char[,] Board { get; } = new char[ROWS, COLUMNS];
-
         private Dictionary<BoardPosition, Ship> ShipPlacements { get; init; }
-
-        public int ShipCount { get; private set; }
-
         private ReadOnlyCollection<Ship> Ships { get; init; }
-
-        //public int ShipCount 
-        //{
-        //    get
-        //    {
-        //        return Ships is not null ? Ships.Count : 0;
-        //    }
-        //}
+        public int ShipCount
+        {
+            get
+            {
+                return Ships is not null ? Ships.Count : 0;
+            }
+        }
 
         public BattleshipBoard()
         {
@@ -51,29 +40,14 @@ namespace BattleshipStateTracker
                 throw new ArgumentException("Board couldn't accomodate all ships. Some ship positions overlap.");
 
             this.Ships = shipsForBoard;
-            ShipCount = shipsForBoard.Count;
         }
 
-        public bool IsShipAtNew(int startingXPosition, int startingYPosition)
+        public bool IsShipAt(int startingXPosition, int startingYPosition)
         {
             return ShipPlacements.ContainsKey(new BoardPosition(startingXPosition, startingYPosition));
         }
 
-        //public bool IsShipAt(int startingXPosition, int startingYPosition)
-        //{
-        //    return Board[startingXPosition, startingYPosition].Equals(OCCUPIED_SPOT_CHARACTER);
-        //}
-
-        //public bool IsEmpty()
-        //{
-        //    foreach(var boardItem in Board)
-        //        if (!boardItem.Equals(FREE_SPOT_CHARACTER))
-        //            return false;
-
-        //    return true;
-        //}
-
-        public bool IsEmptyNew()
+        public bool IsEmpty()
         {
             return ShipCount.Equals(0) ? true : false;
         }
@@ -91,58 +65,12 @@ namespace BattleshipStateTracker
                 return false;
         }
 
-        //private void InitializeEmptyBoard()
-        //{
-        //    for(int rowIndex = 0; rowIndex < Board.GetLength(0); rowIndex++)
-        //    {
-        //        for (int columnIndex = 0; columnIndex < Board.GetLength(1); columnIndex++)
-        //            Board[rowIndex, columnIndex] = FREE_SPOT_CHARACTER;
-        //    }
-        //}
-
         private bool CanBoardAccomodateShip(Ship ship)
         {
-            if (ship.OccupiedBoardPositions.Any(position => IsShipAtNew(position.XPosition, position.YPosition)))
+            if (ship.OccupiedBoardPositions.Any(position => IsShipAt(position.XPosition, position.YPosition)))
                 return false;
 
             return true;
         }
-
-        //private bool CanShipBePlacedAt(int startingXPosition, int startingYPosition, int shipLength, ShipOrientation orientation)
-        //{
-        //    if (startingXPosition < 0 || startingXPosition >= ROWS || startingYPosition < 0 || startingYPosition >= COLUMNS)
-        //        return false;
-
-        //    if(orientation == ShipOrientation.Horizontal)
-        //    {
-        //        if (startingXPosition + shipLength >= COLUMNS)
-        //            return false;
-
-        //        var targetShipPositions = GetTargetShipPositions(startingXPosition, shipLength);
-        //        if (targetShipPositions.Any(position => IsShipAt(position, startingYPosition)))
-        //            return false;
-        //    }                
-        //    else if (orientation == ShipOrientation.Vertical)
-        //    {
-        //        if (startingYPosition + shipLength >= ROWS)
-        //            return false;
-
-        //        var targetShipPositions = GetTargetShipPositionsInVerticalOrientation(startingYPosition, shipLength);
-        //        if (targetShipPositions.Any(position => IsShipAt(startingXPosition, position)))
-        //            return false;
-        //    }
-
-        //    return true;
-        //}
-
-        //private ReadOnlyCollection<int> GetTargetShipPositions(int startingXPosition, int shipLength)
-        //{
-        //    return Enumerable.Range(0, shipLength).Select(x => x + startingXPosition).ToList().AsReadOnly();
-        //}
-
-        //private ReadOnlyCollection<int> GetTargetShipPositionsInVerticalOrientation(int startingYPosition, int shipLength)
-        //{
-        //    return Enumerable.Range(0, shipLength).Select(position => position + startingYPosition).ToList().AsReadOnly();
-        //}
     }
 }

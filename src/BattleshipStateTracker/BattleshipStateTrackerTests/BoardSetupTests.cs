@@ -20,7 +20,7 @@ namespace BattleshipStateTrackerTests
             BattleshipBoard board = new BattleshipBoard(new Ship("Destroyer", new BoardPosition(startingXPosition, startingYPosition), shipLength, ShipOrientation.Horizontal));
 
             // Assert
-            board.IsShipAtNew(startingXPosition, startingYPosition).Should().BeTrue();
+            board.IsShipAt(startingXPosition, startingYPosition).Should().BeTrue();
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace BattleshipStateTrackerTests
             BattleshipBoard board = new BattleshipBoard();
 
             // Assert
-            board.IsEmptyNew().Should().BeTrue();
+            board.IsEmpty().Should().BeTrue();
         }
 
         [Fact]
@@ -44,8 +44,8 @@ namespace BattleshipStateTrackerTests
 
             // Assert
             var allExpectedOccupiedColumns = GetExpectedTargetShipPositions(anyXPosition, anyShipLength);
-            allExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAtNew(x, anyYPosition).Should().BeTrue());
-            board.IsEmptyNew().Should().BeFalse();
+            allExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, anyYPosition).Should().BeTrue());
+            board.IsEmpty().Should().BeFalse();
         }
 
         [Fact]
@@ -113,9 +113,9 @@ namespace BattleshipStateTrackerTests
             var ship2ExpectedOccupiedColumns = GetExpectedTargetShipPositions(secondShipXPosition, secondShipLength);
             var ship3ExpectedOccupiedColumns = GetExpectedTargetShipPositions(thirdShipXPosition, thirdShipLength);
             
-            ship1ExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAtNew(x, firstShipYPosition).Should().BeTrue());
-            ship2ExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAtNew(x, secondShipYPosition).Should().BeTrue());
-            ship3ExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAtNew(x, thirdShipYPosition).Should().BeTrue());
+            ship1ExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, firstShipYPosition).Should().BeTrue());
+            ship2ExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, secondShipYPosition).Should().BeTrue());
+            ship3ExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, thirdShipYPosition).Should().BeTrue());
         }
 
         [Fact]
@@ -129,8 +129,8 @@ namespace BattleshipStateTrackerTests
 
             // Assert
             var allExpectedOccupiedRows = GetExpectedTargetShipPositionsInVerticalOrientation(anyYPosition, anyShipLength);
-            allExpectedOccupiedRows.ToList().ForEach(x => board.IsShipAtNew(anyXPosition, x).Should().BeTrue());
-            board.IsEmptyNew().Should().BeFalse();
+            allExpectedOccupiedRows.ToList().ForEach(x => board.IsShipAt(anyXPosition, x).Should().BeTrue());
+            board.IsEmpty().Should().BeFalse();
         }
 
         [Fact]
@@ -166,9 +166,9 @@ namespace BattleshipStateTrackerTests
             var ship2ExpectedOccupiedRows = GetExpectedTargetShipPositionsInVerticalOrientation(secondShipYPosition, secondShipLength);
             var ship3ExpectedOccupiedRows = GetExpectedTargetShipPositionsInVerticalOrientation(thirdShipYPosition, thirdShipLength);
 
-            ship1ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAtNew(firstShipXPosition, yPosition).Should().BeTrue());
-            ship2ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAtNew(secondShipXPosition, yPosition).Should().BeTrue());
-            ship3ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAtNew(thirdShipXPosition, yPosition).Should().BeTrue());
+            ship1ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAt(firstShipXPosition, yPosition).Should().BeTrue());
+            ship2ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAt(secondShipXPosition, yPosition).Should().BeTrue());
+            ship3ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAt(thirdShipXPosition, yPosition).Should().BeTrue());
         }
 
         [Fact]
@@ -204,9 +204,9 @@ namespace BattleshipStateTrackerTests
             var ship2ExpectedOccupiedRows = GetExpectedTargetShipPositionsInVerticalOrientation(secondShipYPosition, secondShipLength);
             var ship3ExpectedOccupiedColumns = GetExpectedTargetShipPositions(thirdShipXPosition, thirdShipLength);
             
-            ship1ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAtNew(firstShipXPosition, yPosition).Should().BeTrue());
-            ship2ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAtNew(secondShipXPosition, yPosition).Should().BeTrue());
-            ship3ExpectedOccupiedColumns.ToList().ForEach(xPosition => board.IsShipAtNew(xPosition, thirdShipYPosition).Should().BeTrue());
+            ship1ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAt(firstShipXPosition, yPosition).Should().BeTrue());
+            ship2ExpectedOccupiedRows.ToList().ForEach(yPosition => board.IsShipAt(secondShipXPosition, yPosition).Should().BeTrue());
+            ship3ExpectedOccupiedColumns.ToList().ForEach(xPosition => board.IsShipAt(xPosition, thirdShipYPosition).Should().BeTrue());
         }
 
         [Fact]
@@ -220,8 +220,8 @@ namespace BattleshipStateTrackerTests
 
             // Assert
             var allExpectedOccupiedColumns = GetExpectedTargetShipPositions(anyXPosition, anyShipLength);
-            allExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAtNew(x, anyYPosition).Should().BeTrue());
-            board.IsEmptyNew().Should().BeFalse();
+            allExpectedOccupiedColumns.ToList().ForEach(x => board.IsShipAt(x, anyYPosition).Should().BeTrue());
+            board.IsEmpty().Should().BeFalse();
             board.ShipCount.Should().Be(1);
         }
 
