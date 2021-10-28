@@ -37,7 +37,7 @@ namespace BattleshipStateTracker
                     return AttackResponse.HitAndSunk;
                 }
                 else
-                    return AttackResponse.Hit; ;
+                    return AttackResponse.Hit;
             }
 
             return AttackResponse.Miss;
