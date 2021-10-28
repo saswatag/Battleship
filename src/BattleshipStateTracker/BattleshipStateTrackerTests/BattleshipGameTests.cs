@@ -245,5 +245,23 @@ namespace BattleshipStateTrackerTests
             game.AttackPlayerOneAt(new BoardPosition(2, 2)).Should().Be(AttackResponse.GameOver);
             
         }
+
+        [Fact]
+        public void Both_Players_Cannot_Loose_Game()
+        {
+            var player1 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var player2 = new Player("Player 1", new BattleshipBoard(new Ship("Destroyer", new BoardPosition(2, 2), 4, ShipOrientation.Horizontal)));
+            var game = new BattleshipGame(player1, player2);
+
+            // Assert
+            game.AttackPlayerOneAt(new BoardPosition(2, 2)).Should().Be(AttackResponse.Hit);
+            game.AttackPlayerOneAt(new BoardPosition(2, 1)).Should().Be(AttackResponse.Miss);
+            game.AttackPlayerOneAt(new BoardPosition(2, 3)).Should().Be(AttackResponse.Miss);
+            game.AttackPlayerOneAt(new BoardPosition(3, 2)).Should().Be(AttackResponse.Hit);
+            game.AttackPlayerOneAt(new BoardPosition(4, 2)).Should().Be(AttackResponse.Hit);
+            game.AttackPlayerOneAt(new BoardPosition(5, 2)).Should().Be(AttackResponse.HitAndSunk);
+            game.PlayerOne.LostGame.Should().BeTrue();
+            game.PlayerTwo.LostGame.Should().BeFalse();
+        }
     }
 }
