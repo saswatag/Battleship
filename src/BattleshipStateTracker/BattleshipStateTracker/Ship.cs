@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BattleshipStateTracker
 {
@@ -20,6 +21,9 @@ namespace BattleshipStateTracker
 
         public Ship(string name, BoardPosition positionedAt, int shipLength, ShipOrientation orientation)
         {
+            if (shipLength <= 0 || shipLength > 10)
+                throw new ArgumentException($"Ship length shuold be in the range 1 to 10.");
+
             Name = name;
             Length = shipLength;
             PositionedAt = positionedAt;

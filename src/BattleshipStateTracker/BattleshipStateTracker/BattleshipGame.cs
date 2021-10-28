@@ -2,47 +2,34 @@
 
 namespace BattleshipStateTracker
 {
-    public static class AttackResponse
+    public enum AttackResponse
     {
-        public static (bool Hit, bool SunkShip, bool GameWon) Hit = (Hit: true, SunkShip: false, GameWon: false);
-
-        public static (bool Hit, bool SunkShip, bool GameWon) Miss = (Hit: false, SunkShip: false, GameWon: false);
-
-        public static (bool Hit, bool SunkShip, bool GameWon) HitAndSunk = (Hit: true, SunkShip: true, GameWon: false);
-
-        public static (bool Hit, bool SunkShip, bool GameWon) SunkAndWon = (Hit: true, SunkShip: true, GameWon: true);
+        Hit,
+        Miss,
+        HitAndSunk,
+        GameOver
     }
 
     public class BattleshipGame
     {
-        public BattleshipBoard PlayerOneBoard { get; init; }
-        public BattleshipBoard PlayerTwoBoard { get; init; }
+        public Player PlayerOne { get; init; }
+        public Player PlayerTwo { get; init; }
 
-        public BattleshipGame(BattleshipBoard battleshipBoard1, BattleshipBoard battleshipBoard2)
+        public BattleshipGame(Player player1, Player player2)
         {
-            if (battleshipBoard1.IsEmpty() || battleshipBoard2.IsEmpty())
+            if (player1.Board.IsEmpty() || player2.Board.IsEmpty())
                 throw new ArgumentException("Game cannot be started with empty boards");
 
-            PlayerOneBoard = battleshipBoard1;
-            PlayerTwoBoard = battleshipBoard2;
+            PlayerOne = player1;
+            PlayerTwo = player2;
         }
 
-        public (bool Hit, bool SunkShip, bool GameWon) AttackPlayerOneAt(BoardPosition attackPosition)
+        public AttackResponse AttackPlayerOneAt(BoardPosition attackPosition)
         {
-            if(PlayerOneBoard.IsShipAt(attackPosition.XPosition, attackPosition.YPosition))
-            {
-                if (PlayerOneBoard.HasShipAtPositionSunk(attackPosition))
-                {
-                    if (PlayerOneBoard.HaveAllShipsSunk())
-                        return AttackResponse.SunkAndWon;
-                    else
-                        return AttackResponse.HitAndSunk;
-                }
-                else
-                    return AttackResponse.Hit;
-            }
+            if (PlayerOne.LostGame)
+                return AttackResponse.GameOver;
 
-            return AttackResponse.Miss;
+            return PlayerOne.TakeAttack(attackPosition);
         }
     }
 }
