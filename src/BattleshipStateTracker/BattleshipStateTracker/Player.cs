@@ -3,12 +3,6 @@ using System.Collections.Generic;
 
 namespace BattleshipStateTracker
 {
-    public enum AttackResponseNew
-    {
-        Hit,
-        Miss,
-        HitAndSunk
-    }
     public class Player
     {
         public string Name { get; init; }
@@ -29,7 +23,7 @@ namespace BattleshipStateTracker
             LostGame = false;
         }
 
-        public AttackResponseNew TakeAttack(BoardPosition attackPosition)
+        public AttackResponse TakeAttack(BoardPosition attackPosition)
         {
             if (Board.IsShipAt(attackPosition.XPosition, attackPosition.YPosition))
             {
@@ -40,13 +34,13 @@ namespace BattleshipStateTracker
                         LostGame = true;
                     }
 
-                    return AttackResponseNew.HitAndSunk;
+                    return AttackResponse.HitAndSunk;
                 }
                 else
-                    return AttackResponseNew.Hit; ;
+                    return AttackResponse.Hit; ;
             }
 
-            return AttackResponseNew.Miss;
+            return AttackResponse.Miss;
         }
     }
 }
